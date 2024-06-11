@@ -17,7 +17,7 @@ import { Event } from "three"
 
 function noop() {}
 
-class ElementProxyReceiver extends THREE.EventDispatcher {
+export class ElementProxyReceiver extends THREE.EventDispatcher {
   left = 0
   top = 0
   width = 0
@@ -47,6 +47,7 @@ class ElementProxyReceiver extends THREE.EventDispatcher {
     }
   }
   handleEvent(data: Record<string, unknown> & Event) {
+    console.log("handleEvent", data)
     if (data["type"] === "size") {
       this.left = data["left"] as number
       this.top = data["top"] as number
@@ -60,6 +61,7 @@ class ElementProxyReceiver extends THREE.EventDispatcher {
   }
   focus() {}
   releasePointerCapture() {}
+  setPointerCapture() {}
 }
 
 class ProxyManager {
@@ -166,8 +168,18 @@ export const processEvent = (
 }
 
 const processInteraction = ({ event, canvasId }: InteractionMessage) => {
+  console.log("processInteraction", event)
   proxyManager.handleEvent({ id: canvasId, data: event })
 }
+
+// export const getProxyElement = () => {
+//   const canvasId = useCanvasId()
+//   const proxy = proxyManager.getProxy(canvasId)
+//   if (!proxy) {
+//     throw new Error("Proxy should exist, because we created it in init")
+//   }
+//   return proxy
+// }
 
 /**
 // export const useCanvasId = () => {
@@ -250,6 +262,7 @@ const processInit = ({ canvas, width, height, props, canvasId, x, y }: InitMessa
     x: x,
     y: y,
     props: props,
+    proxy: proxy as unknown as HTMLElement,
   })
 
   // root.configure({

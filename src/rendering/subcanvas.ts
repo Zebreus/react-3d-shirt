@@ -11,12 +11,13 @@ export const addSubcanvas = (subcanvas: {
   width: number
   height: number
   props: WorkerProps
+  proxy: HTMLElement
 }) => {
   if (subcanvases[subcanvas.id]) {
     console.warn("overwriting canvas")
     return
   }
-  const { scene, camera } = createScene(subcanvas.props)
+  const { scene, camera } = createScene(subcanvas.props, subcanvas.proxy)
   subcanvases[subcanvas.id] = {
     canvas: subcanvas.canvas,
     x: subcanvas.x,

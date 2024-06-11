@@ -1,8 +1,9 @@
 import { WorkerProps } from "OffscreenShirt"
 import { addShirt, updateShirt } from "rendering/shirt"
 import { DirectionalLight, PerspectiveCamera, Scene } from "three"
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 
-export const createScene = (props: WorkerProps) => {
+export const createScene = (props: WorkerProps, controlProxy: HTMLElement) => {
   const fov = 75
   const aspect = 2 // the canvas default
   const near = 0.1
@@ -32,6 +33,14 @@ export const createScene = (props: WorkerProps) => {
       disabled: props.disabled,
     })
   }
+
+  const controls = new OrbitControls(camera, controlProxy)
+  controls.autoRotate = true
+  controls.autoRotateSpeed = 1
+
+  scene.addEventListener("tick", () => {
+    controls.update()
+  })
 
   return { scene, camera, updateProps }
 }

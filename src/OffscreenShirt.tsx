@@ -94,7 +94,8 @@ export type UpdatePropsMessage = {
 export type InteractionMessage = {
   event: Record<string, unknown>
   type: "interaction"
-  canvasId: string
+  /** String for poiner up and down to a specific canvas, undefined for moves */
+  canvasId: string | undefined
 }
 
 export type UpdateTextureMessage = {
@@ -432,6 +433,7 @@ export const OffscreenShirtCanvas = ({
   return (
     <canvas
       onClick={e => {
+        console.log("click")
         const message: InteractionMessage = {
           event: prepareMouseEvent(e.nativeEvent),
           type: "interaction",
@@ -440,6 +442,7 @@ export const OffscreenShirtCanvas = ({
         worker.postMessage(message)
       }}
       onPointerDown={e => {
+        console.log("click")
         const message: InteractionMessage = {
           event: prepareMouseEvent(e.nativeEvent),
           type: "interaction",
@@ -466,6 +469,7 @@ export const OffscreenShirtCanvas = ({
       style={{
         width: "100%",
         height: "100%",
+        zIndex: 3,
       }}
       height={800}
       width={664}
@@ -531,7 +535,7 @@ export const OffscreenShirt = ({
       style={{ background: "transparent", position: "relative", width: "100%", height: "100%" }}
       className={`${className}`}
     >
-      {ready ? null : coverElement}
+      {/* {ready ? null : coverElement} */}
       {worker && delayReady ? (
         <OffscreenShirtCanvas
           setDecalReady={setDecalReady}
